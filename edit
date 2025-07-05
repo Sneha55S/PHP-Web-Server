@@ -1,0 +1,12 @@
+<h2>Edit Reminder</h2>
+<form action="<?=URLROOT;?>/notes/edit/<?=$data['note']->id;?>" method="post">
+  <div class="mb-3">
+    <label>Subject</label>
+    <input type="text" name="subject" value="<?=htmlspecialchars($data['note']->subject);?>" class="form-control" required>
+  </div>
+  <div class="form-check mb-3">
+    <input name="completed" type="checkbox" class="form-check-input" <?= $data['note']->completed ? 'checked' : ''; ?>>
+    <label class="form-check-label">Completed?</label>
+  </div>
+  <button class="btn btn-success">Update</button>
+</form>
