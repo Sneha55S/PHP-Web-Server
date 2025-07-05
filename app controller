@@ -1,0 +1,44 @@
+<?php
+class Notes extends Controller {
+
+  public function __construct(){
+    if (!isLoggedIn()) redirect('users/login');
+    $this->noteModel = $this->model('Note');
+  }
+
+  public function index(){
+    $notes = $this->noteModel->getNotesByUserId($_SESSION['user_id']);
+    $this->view('notes/index', ['notes' => $notes]);
+  }
+
+  public function create(){
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $data = [
+        'user_id' => $_SESSION['user_id'],
+        'subject' => trim($_POST['subject'])
+      ];
+      $this->noteModel->addNote($data);
+      redirect('notes');
+    } else {
+      $this->view('notes/create');
+    }
+  }
+
+  public function edit($id){
+    $note = $this->noteModel->getNoteById($id);
+    if ($note->user_id !== $_SESSION['user_id']) redirect('notes');
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $data = [...];
+      $this->noteModel->updateNote($data);
+      redirect('notes');
+    } else {
+      $this->view('notes/edit', ['note' => $note]);
+    }
+  }
+
+  public function delete($id){
+    $this->noteModel->deleteNote($id, $_SESSION['user_id']);
+    redirect('notes');
+  }
+}
